@@ -20,12 +20,22 @@ livros = [
 def listar_livros():
     return livros
 
+@app.get("/books/search")
+def pesquisar_livros(titulo: str):
+    resultados = []
+
+    for livro in livros:
+        if titulo.lower() in livro["titulo"].lower():
+            resultados.append(livro)
+    return resultados
+
 @app.get("/books/{id}")
 def buscar_livro(id: int):
     for livro in livros:
         if livro["id"] == id:
             return livro
     raise HTTPException(status_code=404, detail="Item not found")
+
 
 @app.post("/books", status_code=201)
 def cadastrar_livro(livro: LivroCriacao):
@@ -39,6 +49,7 @@ def cadastrar_livro(livro: LivroCriacao):
     novo_livro["id"] = new_id
     livros.append(novo_livro)
     return novo_livro
+
 
 @app.put("/books/{id}")
 def atualizar_livro(id: int, dados: LivroCriacao):
