@@ -39,3 +39,21 @@ def cadastrar_livro(livro: LivroCriacao):
     novo_livro["id"] = new_id
     livros.append(novo_livro)
     return novo_livro
+
+@app.put("/books/{id}")
+def atualizar_livro(id: int, dados: LivroCriacao):
+    for livro in livros:
+        if livro["id"] == id:
+            livro["titulo"] = dados.titulo
+            livro["autor"] = dados.autor
+            return {"id": id, "titulo": dados.titulo, "autor": dados.autor}
+
+    raise HTTPException(status_code=404, detail="Item not found")
+
+@app.delete("/books/{id}")
+def excluir_livro(id: int):
+    for livro in livros:
+        if livro["id"] == id:
+            livros.remove(livro)
+            return {"mensagem": "Livro excluído com sucesso"} 
+    raise HTTPException(status_code=404, detail="Item not found")
