@@ -21,12 +21,19 @@ def listar_livros():
     return livros
 
 @app.get("/books/search")
-def pesquisar_livros(titulo: str):
+def pesquisar_livros(titulo: str | None = None, autor: str | None = None):
     resultados = []
 
     for livro in livros:
-        if titulo.lower() in livro["titulo"].lower():
+        corresponde_titulo = titulo is None or titulo.lower() in livro["titulo"].lower()
+        corresponde_autor = autor is None or autor.lower() in livro["autor"].lower()
+
+        # Seu desafio:
+        if corresponde_titulo and corresponde_autor:
             resultados.append(livro)
+        # Se corresponde_titulo E corresponde_autor forem True,
+        # adicione o livro à lista resultados.
+
     return resultados
 
 @app.get("/books/{id}")
